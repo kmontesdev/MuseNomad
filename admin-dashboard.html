@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      background: #eee7e4;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background: linear-gradient(145deg, #cce0ff, #ffccf5);
+      padding: 40px 20px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border-top-right-radius: 32px;
+      border-bottom-right-radius: 32px;
+      box-shadow: 2px 0 16px rgba(0,0,0,0.04);
+      min-height: 100vh;
+    }
+    .sidebar h2 {
+      font-size: 1.3rem;
+      margin-bottom: 32px;
+      color: #856034;
+      letter-spacing: 1px;
+    }
+    .nav-link {
+      display: block;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      margin-bottom: 18px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      transition: background 0.2s, color 0.2s;
+      font-size: 1rem;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: #fff6f0;
+      color: #d17bff;
+    }
+    .main-content {
+      flex: 1;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: #856034;
+      letter-spacing: 1px;
+    }
+    h2 {
+      margin-top: 0;
+      color: #d17bff;
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 24px;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    }
+    th, td {
+      border: 1px solid #f6e9e0;
+      padding: 12px 10px;
+      text-align: left;
+      font-size: 1rem;
+    }
+    th {
+      background: #f6f6f6;
+      color: #856034;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background: #faf7f5;
+    }
+    @media (max-width: 900px) {
+      .main-content { padding: 24px 8px; }
+      .sidebar { width: 100px; padding: 20px 8px; }
+      .sidebar h2 { font-size: 1rem; }
+      .nav-link { font-size: 0.95rem; padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="#" class="nav-link active" id="dashboard-link">Dashboard</a>
+    <a href="#" class="nav-link" id="messages-link">Messages</a>
+     <a href="#" class="nav-link" id="deliverables-link">Deliverables</a>
+     <a href="#" class="nav-link" id="logout-link">Log Out</a>
+     <a href="#" class="nav-link" id="submit-track-link">Submit Track</a>
+   
+  </aside>
+  <div class="main-content">
+    <h1>Admin Dashboard</h1>
+    <div id="commissions-list"></div>
+    <div id="messages-section" style="display:none; flex:1; min-width:0;">
+      <div style="display:flex; height:100%;">
+        <div id="user-list" style="width:220px; background:#f6f6f6; border-radius:16px; margin-right:24px; padding:16px 0; overflow-y:auto;">
+          <h3 style="margin:0 0 12px 18px; color:#856034; font-size:1.1rem;">Users</h3>
+          <ul id="users-menu" style="list-style:none; padding:0; margin:0;"></ul>
+        </div>
+        <div id="chat-container" style="flex:1; display:flex; flex-direction:column; background:#fff6f0; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.03); padding:24px; min-width:0;">
+          <div id="chat-header" style="font-weight:600; color:#d17bff; margin-bottom:12px;"></div>
+          <div id="chat-messages" style="flex:1; overflow-y:auto; margin-bottom:18px; padding-right:8px;"></div>
+          <form id="chat-form" style="display:flex; gap:8px;">
+            <input id="chat-input" type="text" placeholder="Type a message..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd; font-size:1rem;" autocomplete="off" />
+            <button type="submit" style="background:#d17bff; color:#fff; border:none; border-radius:8px; padding:10px 18px; font-weight:600; cursor:pointer;">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="deliverables-section" style="display:none; flex:1; min-width:0;">
+      <div style="display:flex; height:100%;">
+        <div id="deliverables-user-list" style="width:220px; background:#f6f6f6; border-radius:16px; margin-right:24px; padding:16px 0; overflow-y:auto;">
+          <h3 style="margin:0 0 12px 18px; color:#856034; font-size:1.1rem;">Users</h3>
+          <ul id="deliverables-users-menu" style="list-style:none; padding:0; margin:0;"></ul>
+        </div>
+        <div id="deliverables-content" style="flex:1; display:flex; flex-direction:column; background:#fff6f0; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.03); padding:24px; min-width:0;">
+          <!-- Commission info and upload will go here -->
+        </div>
+      </div>
+    </div>
+    <div id="submit-track-section" style="display:none; margin-top:40px;">
+  <div style="max-width:600px; margin:auto; background:#fff6f0; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.03); padding:24px;">
+    <h2 style="color:#d17bff; margin-bottom:18px;">Submit a New Track</h2>
+    <form id="submit-track-form">
+      <input type="text" id="track-title" placeholder="Track Title" required style="width:100%; margin-bottom:12px; padding:8px; border-radius:8px; border:1px solid #ddd;">
+      <input type="text" id="track-tags" placeholder="Tags (comma separated)" style="width:100%; margin-bottom:12px; padding:8px; border-radius:8px; border:1px solid #ddd;">
+      <input type="file" id="track-file" accept="audio/*" required style="margin-bottom:12px;">
+      <button type="submit" style="background:#d17bff; color:#fff; border:none; border-radius:8px; padding:8px 18px; font-weight:600; cursor:pointer;">Submit Track</button>
+    </form>
+    <div id="submit-track-status" style="margin-top:12px; color:#856034;"></div>
+  </div>
+</div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAhUtDWalOCCci48zptlNimpU0d5HWYT-0",
+      authDomain: "musenomad-cce48.firebaseapp.com",
+      projectId: "musenomad-cce48",
+      storageBucket: "musenomad-cce48.firebasestorage.app",
+      messagingSenderId: "816855456981",
+      appId: "1:816855456981:web:946e6f2b140ad1d33c565c",
+      measurementId: "G-VTDLNGWKNJ"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const dashboardLink = document.getElementById("dashboard-link");
+    const messagesLink = document.getElementById("messages-link");
+    const commissionsList = document.getElementById("commissions-list");
+    const messagesSection = document.getElementById("messages-section");
+    const usersMenu = document.getElementById("users-menu");
+    const chatHeader = document.getElementById("chat-header");
+    const chatMessages = document.getElementById("chat-messages");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+    const deliverablesLink = document.getElementById("deliverables-link");
+    const deliverablesSection = document.getElementById("deliverables-section");
+    const deliverablesUsersMenu = document.getElementById("deliverables-users-menu");
+    const deliverablesContent = document.getElementById("deliverables-content");
+    const submitTrackLink = document.getElementById("submit-track-link");
+    const submitTrackSection = document.getElementById("submit-track-section");
+    const submitTrackForm = document.getElementById("submit-track-form");
+    const submitTrackStatus = document.getElementById("submit-track-status");
+
+    let selectedUserId = null;
+    let unsubscribeChat = null;
+
+    // Navigation logic
+    if (messagesLink && dashboardLink) {
+      messagesLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        commissionsList.style.display = "none";
+        messagesSection.style.display = "flex";
+        messagesLink.classList.add("active");
+        dashboardLink.classList.remove("active");
+        deliverablesSection.style.display = "none";
+        submitTrackSection.style.display = "none";
+      });
+      dashboardLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        commissionsList.style.display = "block";
+        messagesSection.style.display = "none";
+        dashboardLink.classList.add("active");
+        messagesLink.classList.remove("active");
+        deliverablesSection.style.display = "none";
+        submitTrackSection.style.display = "none";
+      });
+    }
+
+    // Chat logic
+    async function selectUserForChat(userId, fullname) {
+      selectedUserId = userId;
+      chatHeader.textContent = `Chat with ${fullname}`;
+      chatMessages.innerHTML = "";
+
+      if (unsubscribeChat) unsubscribeChat();
+
+      const messagesCol = collection(db, "messages");
+      const q = query(
+        messagesCol,
+        where("userId", "==", userId),
+        orderBy("timestamp", "asc")
+      );
+      unsubscribeChat = onSnapshot(q, (snapshot) => {
+        chatMessages.innerHTML = "";
+        snapshot.forEach(msgDoc => {
+          const msg = msgDoc.data();
+          const isAdmin = msg.sender === "admin";
+          const msgDiv = document.createElement("div");
+          msgDiv.style.margin = "8px 0";
+          msgDiv.style.textAlign = isAdmin ? "right" : "left";
+          msgDiv.innerHTML = `
+            <span style="
+              display:inline-block;
+              background:${isAdmin ? "#d17bff" : "#ece1d3"};
+              color:${isAdmin ? "#fff" : "#333"};
+              padding:8px 14px;
+              border-radius:12px;
+              max-width:70%;
+              font-size:1rem;
+              ">
+              ${msg.text}
+            </span>
+            <div style="font-size:0.8rem; color:#b88b5b; margin-top:2px;">
+              ${msg.timestamp && msg.timestamp.toDate ? msg.timestamp.toDate().toLocaleString() : ""}
+            </div>
+          `;
+          chatMessages.appendChild(msgDiv);
+        });
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      });
+    }
+
+    // Send message
+    if (chatForm) {
+      chatForm.onsubmit = async (e) => {
+        e.preventDefault();
+        if (!selectedUserId || !chatInput.value.trim()) return;
+        await addDoc(collection(db, "messages"), {
+          userId: selectedUserId,
+          sender: "admin",
+          text: chatInput.value.trim(),
+          timestamp: serverTimestamp()
+        });
+        chatInput.value = "";
+      };
+    }
+
+    // Log out
+    const logoutLink = document.getElementById("logout-link");
+    if (logoutLink) {
+      logoutLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => {
+          window.location.href = "index.html";
+        });
+      });
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      // Check if user is admin
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists() || !userSnap.data().isAdmin) {
+        document.body.innerHTML = "<h2>Access denied. Admins only.</h2>";
+        setTimeout(() => window.location.href = "index.html", 2000);
+        return;
+      }
+
+      // --- USER LIST FOR MESSAGING ---
+      // Fetch all users
+      const usersCol = collection(db, "users");
+      const usersSnap = await getDocs(usersCol);
+      usersMenu.innerHTML = "";
+      let firstUserId = null;
+      let firstUserFullname = null;
+      usersSnap.forEach((docSnap, idx) => {
+        const data = docSnap.data();
+        const li = document.createElement("li");
+        li.textContent = data.fullname || docSnap.id;
+        li.style.cursor = "pointer";
+        li.style.padding = "8px 18px";
+        li.style.borderRadius = "8px";
+        li.style.marginBottom = "4px";
+        li.style.transition = "background 0.2s";
+        li.addEventListener("mouseenter", () => li.style.background = "#ece1d3");
+        li.addEventListener("mouseleave", () => li.style.background = "");
+        li.addEventListener("click", () => {
+          selectUserForChat(docSnap.id, data.fullname || docSnap.id);
+        });
+        usersMenu.appendChild(li);
+        if (idx === 0) {
+          firstUserId = docSnap.id;
+          firstUserFullname = data.fullname || docSnap.id;
+        }
+      });
+      // Auto-select first user and load their chat
+      if (firstUserId) {
+        selectUserForChat(firstUserId, firstUserFullname);
+      }
+
+      // --- EXISTING COMMISSIONS TABLE CODE ---
+      // Fetch all commissions
+      const commissionsCol = collection(db, "commissions");
+      const commissionsSnap = await getDocs(commissionsCol);
+
+      // Prepare to fetch user fullnames
+      const userCache = {};
+
+      // Build table header
+      let html = `
+        <h2>All Submissions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Description</th>
+              <th>References</th>
+              <th>User</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      // Helper to get user's fullname by UID (with caching)
+      async function getUserFullname(uid) {
+        if (userCache[uid]) return userCache[uid];
+        const userRef = doc(db, "users", uid);
+        const userSnap = await getDoc(userRef);
+        const fullname = userSnap.exists() ? (userSnap.data().fullname || uid) : uid;
+        userCache[uid] = fullname;
+        return fullname;
+      }
+
+      // Collect all commission docs and their userIds
+      const commissionDocs = [];
+      commissionsSnap.forEach(docSnap => {
+        commissionDocs.push(docSnap);
+      });
+
+      // Fetch all user fullnames in parallel
+      const userFullnames = await Promise.all(
+        commissionDocs.map(docSnap => getUserFullname(docSnap.data().userId))
+      );
+
+      // Build table rows
+      commissionDocs.forEach((docSnap, idx) => {
+        const data = docSnap.data();
+        html += `
+          <tr>
+            <td>${data.projectType || ""}</td>
+            <td>${data.description || ""}</td>
+            <td>${(data.references || []).join("<br>")}</td>
+            <td>${userFullnames[idx]}</td>
+            <td>${data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : ""}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+          </tbody>
+        </table>
+      `;
+      commissionsList.innerHTML = html;
+    });
+
+    if (deliverablesLink && deliverablesSection) {
+      deliverablesLink.addEventListener("click", async (e) => {
+        e.preventDefault();
+        commissionsList.style.display = "none";
+        messagesSection.style.display = "none";
+        deliverablesSection.style.display = "flex";
+        deliverablesLink.classList.add("active");
+        dashboardLink.classList.remove("active");
+        messagesLink.classList.remove("active");
+        submitTrackSection.style.display = "none";
+
+        // Populate user list
+        deliverablesUsersMenu.innerHTML = "<li>Loading...</li>";
+        const usersCol = collection(db, "users");
+        const usersSnap = await getDocs(usersCol);
+        deliverablesUsersMenu.innerHTML = "";
+        usersSnap.forEach(docSnap => {
+          const data = docSnap.data();
+          const li = document.createElement("li");
+          li.textContent = data.fullname || docSnap.id;
+          li.style.cursor = "pointer";
+          li.style.padding = "8px 18px";
+          li.style.borderRadius = "8px";
+          li.style.marginBottom = "4px";
+          li.style.transition = "background 0.2s";
+          li.addEventListener("mouseenter", () => li.style.background = "#ece1d3");
+          li.addEventListener("mouseleave", () => li.style.background = "");
+          li.addEventListener("click", () => {
+            showUserDeliverable(docSnap.id, data.fullname || docSnap.id);
+          });
+          deliverablesUsersMenu.appendChild(li);
+        });
+        deliverablesContent.innerHTML = "<p>Select a user to view their active commission.</p>";
+      });
+    }
+
+    async function showUserDeliverable(userId, fullname) {
+      deliverablesContent.innerHTML = "<p>Loading commission...</p>";
+      // Get latest commission for this user (or filter by status if you want)
+      const commissionsCol = collection(db, "commissions");
+      const q = query(commissionsCol, where("userId", "==", userId), orderBy("createdAt", "desc"), /*limit(1)*/);
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        deliverablesContent.innerHTML = `<p>No commissions found for ${fullname}.</p>`;
+        return;
+      }
+      const docSnap = snap.docs[0];
+      const data = docSnap.data();
+      const commissionId = docSnap.id;
+
+      // Try to get existing deliverable
+      let audioHtml = "<em>No deliverable uploaded yet.</em>";
+      try {
+        const url = await getDownloadURL(ref(storage, `deliverables/${commissionId}/audio.mp3`));
+        audioHtml = `<audio controls src="${url}" style="width:100%;"></audio>`;
+      } catch (e) {}
+
+      deliverablesContent.innerHTML = `
+        <h3>Active Commission for ${fullname}</h3>
+        <div><strong>Type:</strong> ${data.projectType || ""}</div>
+        <div><strong>Description:</strong> ${data.description || ""}</div>
+        <div><strong>Status:</strong> ${data.status || "In Progress"}</div>
+        <div><strong>Submitted:</strong> ${data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : ""}</div>
+        <div style="margin:18px 0;">
+          <strong>Deliverable:</strong><br>
+          ${audioHtml}
+        </div>
+        <form id="upload-deliverable-form">
+          <label>Upload new audio file:</label>
+          <input type="file" id="deliverable-file" accept="audio/*" required style="margin:8px 0;">
+          <button type="submit" style="background:#d17bff; color:#fff; border:none; border-radius:8px; padding:8px 18px; font-weight:600; cursor:pointer;">Upload</button>
+        </form>
+        <div id="upload-status" style="margin-top:8px; color:#856034;"></div>
+      `;
+
+      // Upload logic
+      const uploadForm = document.getElementById("upload-deliverable-form");
+      const uploadStatus = document.getElementById("upload-status");
+      if (uploadForm) {
+        uploadForm.onsubmit = async (e) => {
+          e.preventDefault();
+          const fileInput = document.getElementById("deliverable-file");
+          if (!fileInput.files.length) return;
+          const file = fileInput.files[0];
+          uploadStatus.textContent = "Uploading...";
+          try {
+            const fileRef = ref(storage, `deliverables/${commissionId}/audio.mp3`);
+            await uploadBytes(fileRef, file);
+            uploadStatus.textContent = "Upload successful!";
+            showUserDeliverable(userId, fullname); // Refresh view
+          } catch (err) {
+            uploadStatus.textContent = "Upload failed.";
+          }
+        };
+      }
+    }
+
+    // Submit track logic
+    if (submitTrackLink) {
+      submitTrackLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        // Hide other sections
+        commissionsList.style.display = "none";
+        messagesSection.style.display = "none";
+        deliverablesSection.style.display = "none";
+        submitTrackSection.style.display = "block";
+        // Set active class
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        submitTrackLink.classList.add('active');
+      });
+    }
+
+    if (submitTrackForm) {
+      submitTrackForm.onsubmit = async (e) => {
+        e.preventDefault();
+        submitTrackStatus.textContent = "Uploading...";
+        const title = document.getElementById("track-title").value.trim();
+        const tags = document.getElementById("track-tags").value.split(",").map(t => t.trim()).filter(Boolean);
+        const fileInput = document.getElementById("track-file");
+        if (!fileInput.files.length) {
+          submitTrackStatus.textContent = "Please select an audio file.";
+          return;
+        }
+        const file = fileInput.files[0];
+        try {
+          // Upload to storage
+          const fileRef = ref(storage, `musicLibrary/${Date.now()}_${file.name}`);
+          await uploadBytes(fileRef, file);
+          const url = await getDownloadURL(fileRef);
+          // Add to Firestore
+          await addDoc(collection(db, "musicLibrary"), {
+            title,
+            tags,
+            url,
+            createdAt: serverTimestamp()
+          });
+          submitTrackStatus.textContent = "Track submitted!";
+          submitTrackForm.reset();
+        } catch (err) {
+          submitTrackStatus.textContent = "Upload failed.";
+        }
+      };
+    }
+  </script>
+</body>
+</html>

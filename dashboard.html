@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fdfdfd;
+      color: #2c1d0b;
+      display: flex;
+    }
+    .sidebar {
+      width: 240px;
+      background: #ece1d3;
+      height: 100vh;
+      padding: 32px 20px;
+      box-shadow: 4px 0 12px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 32px;
+      color: #856034;
+    }
+    .nav-link {
+      color: #333;
+      text-decoration: none;
+      font-size: 15px;
+      margin: 10px 0;
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: #f6f6f6;
+      transform: scale(1.03);
+      color: #d17bff;
+    }
+    .main {
+      flex-grow: 1;
+      padding: 60px;
+      background-color: #eee7e4
+    }
+    .main h1 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 32px;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+    .card {
+      background: linear-gradient(145deg, #cce0ff, #ffccf5);
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      flex: 1 1 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease;
+    }
+    .card:hover { transform: translateY(-4px); }
+    .card h3 { font-size: 1.25rem; margin-bottom: 12px; }
+    .card p { font-size: 0.95rem; color: #444; margin-bottom: 20px; }
+    .card button {
+      background-color: #222;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      align-self: flex-start;
+    }
+    .card button:hover { background-color: #000; }
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        height: auto;
+        padding: 20px;
+        border-radius: 0;
+      }
+      .main { padding: 30px 20px; }
+      .cards { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <h2>🎨 Creator</h2>
+    <a class="nav-link" href="index.html" id="home-link">Home</a>
+    <a class="nav-link active" href="#" id="dashboard-link">Dashboard</a>
+    <a class="nav-link" href="#" id="my-commissions-link">My Commissions</a>
+    <a class="nav-link" href="#">Subscription</a>
+    <a class="nav-link" href="#" id="messages-link">Messages</a>
+    <a class="nav-link" href="#">Settings</a>
+    <a class="nav-link" href="#" id="music-library-link">Music Library</a>
+    <a class="nav-link" href="#" id="logout-link">Log Out</a>
+
+  </aside>
+  <main class="main">
+    <h1>Welcome back, Creator</h1>
+    <div class="cards" id="main-cards">
+      <div class="card">
+        <h3>✨ Start a New Commission</h3>
+        <p>Begin a new custom work request. Describe your vision and we’ll match it to an artist.</p>
+        <button>Start Now</button>
+      </div>
+      <div class="card">
+        <h3>🛌 Pause Subscription</h3>
+        <p>Take a break from monthly billing. Resume anytime, no questions asked.</p>
+        <button>Pause</button>
+      </div>
+      <div class="card">
+        <h3>🚀 Queue More Commissions</h3>
+        <p>Add extra requests to your current project queue for priority delivery.</p>
+        <button>Add to Queue</button>
+      </div>
+    </div>
+    <div class="cards" id="trial-card" style="display:none;">
+      <div class="card">
+        <h3>🎉 Activate Your Free Trial</h3>
+        <p>Enjoy premium features for free. No credit card required.</p>
+        <button id="start-trial-btn">Start Free Trial</button>
+      </div>
+    </div>
+    <div id="commission-form-container" style="display:none; margin-top:40px;">
+      <form id="commission-form" class="card" style="max-width:500px; margin:auto; flex-direction:column;">
+        <h3 style="margin-bottom:18px;">Start a New Commission</h3>
+        <label for="project-type" style="margin-bottom:8px;">Project Type</label>
+        <select id="project-type" name="project-type" required style="margin-bottom:18px; padding:8px; border-radius:8px;">
+          <option value="">Select a type</option>
+          <option>Podcast Editing</option>
+          <option>Film Score</option>
+          <option>Videogame Track</option>
+          <option>Audio Repair</option>
+          <option>Foley</option>
+          <option>Mixing & Mastering</option>
+          <option>Other</option>
+        </select>
+        <label for="description" style="margin-bottom:8px;">Project Description</label>
+        <textarea id="description" name="description" rows="4" required style="margin-bottom:18px; padding:8px; border-radius:8px;"></textarea>
+        <div id="reference-links-section" style="margin-bottom:18px;">
+          <label>Reference Link(s)</label>
+          <input type="url" name="reference-link" class="reference-link" placeholder="https://..." style="margin-bottom:8px; padding:8px; border-radius:8px; width:100%;">
+        </div>
+        <button type="button" id="add-reference-btn" style="margin-bottom:18px; background:#ece1d3; color:#333;">Add Another Reference</button>
+        <button type="submit" style="background:#222; color:#fff;">Submit Commission</button>
+      </form>
+    </div>
+    <div id="messages-section" style="display:none; margin-top:40px;">
+      <div style="max-width:600px; margin:auto; background:#fff6f0; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.03); padding:24px;">
+        <div id="chat-header" style="font-weight:600; color:#d17bff; margin-bottom:12px;">Chat with Admin</div>
+        <div id="chat-messages" style="height:260px; overflow-y:auto; margin-bottom:18px; padding-right:8px; background:#f6f6f6; border-radius:12px; padding:12px;"></div>
+        <form id="chat-form" style="display:flex; gap:8px;">
+          <input id="chat-input" type="text" placeholder="Type a message..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd; font-size:1rem;" autocomplete="off" />
+          <button type="submit" style="background:#d17bff; color:#fff; border:none; border-radius:8px; padding:10px 18px; font-weight:600; cursor:pointer;">Send</button>
+        </form>
+      </div>
+    </div>
+    <div id="my-commissions-section" style="display:none; margin-top:40px;">
+      <div style="max-width:700px; margin:auto; background:#fff6f0; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.03); padding:24px;">
+        <h2 style="color:#d17bff; margin-bottom:18px;">My Commissions</h2>
+        <div id="my-commissions-list"></div>
+      </div>
+    </div>
+    <div id="music-library-section" style="display:none; margin-top:40px;">
+      <div style="max-width:1180px; margin:auto; background:#fff6f0; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.03); padding:24px;">
+        <h2 style="color:#d17bff; margin-bottom:18px;">Royalty Free Music Library</h2>
+        <form id="music-search-form" style="display:flex; gap:12px; margin-bottom:18px;">
+          <input id="music-search-input" type="text" placeholder="Search by title or tag..." style="flex:1; padding:8px; border-radius:8px; border:1px solid #ddd;">
+          <button type="submit" style="background:#d17bff; color:#fff; border:none; border-radius:8px; padding:8px 18px; font-weight:600; cursor:pointer;">Search</button>
+        </form>
+        <div id="music-tags" style="margin-bottom:18px;"></div>
+        <div id="music-library-list"></div>
+        <div id="music-library-pagination" style="margin-top:18px; text-align:center;"></div>
+      </div>
+    </div>
+    <div id="commission-details-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+      <div style="background:#fff6f0; border-radius:16px; max-width:400px; width:90%; margin:auto; padding:32px 24px; position:relative;">
+        <button id="close-details-modal" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.5rem; color:#d17bff; cursor:pointer;">&times;</button>
+        <div id="commission-details-content"></div>
+      </div>
+    </div>
+  </main>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, setDoc, addDoc, collection, serverTimestamp, query, where, orderBy, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAhUtDWalOCCci48zptlNimpU0d5HWYT-0",
+  authDomain: "musenomad-cce48.firebaseapp.com",
+  projectId: "musenomad-cce48",
+  storageBucket: "musenomad-cce48.firebasestorage.app",
+  messagingSenderId: "816855456981",
+  appId: "1:816855456981:web:946e6f2b140ad1d33c565c",
+  measurementId: "G-VTDLNGWKNJ"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+let chatUnsubscribe = null;
+
+// Sidebar navigation: toggle Messages view
+const messagesLink = document.getElementById("messages-link");
+const messagesSection = document.getElementById("messages-section");
+const mainCards = document.getElementById("main-cards");
+const trialCard = document.getElementById("trial-card");
+const dashboardLink = document.getElementById("dashboard-link");
+const myCommissionsLink = document.getElementById("my-commissions-link");
+const myCommissionsSection = document.getElementById("my-commissions-section");
+const myCommissionsList = document.getElementById("my-commissions-list");
+const musicLibraryLink = document.getElementById("music-library-link");
+const musicLibrarySection = document.getElementById("music-library-section");
+const musicLibraryList = document.getElementById("music-library-list");
+const musicLibraryPagination = document.getElementById("music-library-pagination");
+const musicSearchForm = document.getElementById("music-search-form");
+const musicSearchInput = document.getElementById("music-search-input");
+const musicTagsDiv = document.getElementById("music-tags");
+
+let currentMusicPage = 1;
+let currentMusicQuery = "";
+let currentMusicTag = "";
+
+
+
+// IndexedDB helpers
+function openTracksDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('myDatabase', 1);
+    request.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('tracks')) {
+        db.createObjectStore('tracks', { keyPath: 'id' });
+      }
+    };
+    request.onsuccess = function(event) {
+      resolve(event.target.result);
+    };
+    request.onerror = function(event) {
+      reject(event.target.error);
+    };
+  });
+}
+
+function saveTracksToIndexedDB(tracks) {
+  return openTracksDB().then(db => {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('tracks', 'readwrite');
+      const store = tx.objectStore('tracks');
+      store.clear();
+      tracks.forEach(track => store.put(track));
+      tx.oncomplete = () => {
+        localStorage.setItem('tracksCacheTime', Date.now().toString());
+        resolve();
+      };
+      tx.onerror = (e) => reject(e);
+    });
+  });
+}
+
+function getTracksFromIndexedDB() {
+  return openTracksDB().then(db => {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('tracks', 'readonly');
+      const store = tx.objectStore('tracks');
+      const request = store.getAll();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = (e) => reject(e);
+    });
+  });
+}
+
+
+
+
+// --- MUSIC LIBRARY LOGIC (top-level) ---
+async function loadMusicLibrary(page = 1, search = "", tag = "") {
+  musicLibraryList.innerHTML = "Loading...";
+
+  // Check cache age
+  const CACHE_MAX_AGE = 1000 * 60 * 60; // 1 hour
+  const cacheTime = parseInt(localStorage.getItem('tracksCacheTime') || '0', 10);
+  const isCacheExpired = Date.now() - cacheTime > CACHE_MAX_AGE;
+
+  let tracks = !isCacheExpired ? await getTracksFromIndexedDB() : [];
+
+  if (!tracks || tracks.length === 0) {
+    // Fetch from Firestore and cache
+    let q = collection(db, "musicLibrary");
+    tracks = [];
+    const snap = await getDocs(q);
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      tracks.push({ id: docSnap.id, ...data });
+    });
+    await saveTracksToIndexedDB(tracks);
+  }
+
+  // Filter and paginate as before
+  let allTags = new Set();
+  let filteredTracks = tracks.filter(data =>
+    (!search || data.title.toLowerCase().includes(search.toLowerCase()) || (data.tags && data.tags.some(t => t.toLowerCase().includes(search.toLowerCase())))) &&
+    (!tag || (data.tags && data.tags.includes(tag)))
+  );
+  filteredTracks.forEach(data => {
+    if (Array.isArray(data.tags)) data.tags.forEach(t => allTags.add(t));
+  });
+
+  const TRACKS_PER_PAGE = 10;
+  const totalPages = Math.ceil(filteredTracks.length / TRACKS_PER_PAGE);
+  if (page > totalPages) page = 1;
+  currentMusicPage = page;
+  const start = (page - 1) * TRACKS_PER_PAGE;
+  const end = start + TRACKS_PER_PAGE;
+  const pageTracks = filteredTracks.slice(start, end);
+
+  // Render tags
+  musicTagsDiv.innerHTML = Array.from(allTags).map(t =>
+    `<button class="music-tag-btn" style="margin:0 6px 6px 0; padding:4px 10px; border-radius:8px; border:none; background:${t === tag ? "#d17bff" : "#ece1d3"}; color:${t === tag ? "#fff" : "#333"}; cursor:pointer;">${t}</button>`
+  ).join("");
+  document.querySelectorAll('.music-tag-btn').forEach(btn => {
+    btn.onclick = () => loadMusicLibrary(1, "", btn.textContent);
+  });
+
+  // Render tracks
+  if (pageTracks.length === 0) {
+    musicLibraryList.innerHTML = "<p>No tracks found.</p>";
+  } else {
+    musicLibraryList.innerHTML = pageTracks.map(track => `
+      <div style="margin-bottom:18px; padding:12px; background:#f6f6f6; border-radius:12px;">
+        <strong>${track.title}</strong>
+        <div style="margin:6px 0;">${(track.tags || []).map(t => `<span style="background:#ece1d3; border-radius:6px; padding:2px 8px; margin-right:4px; font-size:0.85em;">${t}</span>`).join("")}</div>
+        <audio controls src="${track.url}" style="width:100%;"></audio>
+      </div>
+    `).join("");
+  }
+
+  // Pagination controls
+  if (totalPages > 1) {
+    musicLibraryPagination.innerHTML = Array.from({length: totalPages}, (_, i) =>
+      `<button class="music-page-btn" style="margin:0 3px; padding:4px 10px; border-radius:8px; border:none; background:${i+1===page?"#d17bff":"#ece1d3"}; color:${i+1===page?"#fff":"#333"}; cursor:pointer;">${i+1}</button>`
+    ).join("");
+    document.querySelectorAll('.music-page-btn').forEach((btn, i) => {
+      btn.onclick = () => loadMusicLibrary(i+1, search, tag);
+    });
+  } else {
+    musicLibraryPagination.innerHTML = "";
+  }
+}
+
+// Search form
+if (musicSearchForm) {
+  musicSearchForm.onsubmit = (e) => {
+    e.preventDefault();
+    loadMusicLibrary(1, musicSearchInput.value.trim(), "");
+  };
+}
+
+// --- MY COMMISSIONS LOGIC (top-level) ---
+async function loadMyCommissions() {
+  myCommissionsList.innerHTML = "Loading...";
+  const user = auth.currentUser;
+  if (!user) {
+    myCommissionsList.innerHTML = "You must be logged in.";
+    return;
+  }
+  const commissionsCol = collection(db, "commissions");
+  const q = query(commissionsCol, where("userId", "==", user.uid), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+
+  if (snap.empty) {
+    myCommissionsList.innerHTML = "<p>No commissions found.</p>";
+    return;
+  }
+
+  let html = "";
+  for (const docSnap of snap.docs) {
+    const data = docSnap.data();
+    const commissionId = docSnap.id;
+    html += `<div style="margin-bottom:32px; padding-bottom:16px; border-bottom:1px solid #eee;">
+      <div><strong>Type:</strong> ${data.projectType || ""}</div>
+      <div><strong>Description:</strong> ${data.description || ""}</div>
+      <div><strong>Status:</strong> ${data.status || "In Progress"}</div>
+      <div><strong>Submitted:</strong> ${data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : ""}</div>
+      <button class="view-details-btn" data-commission-id="${commissionId}" style="margin-top:12px; background:#d17bff; color:white; border:none; padding:8px 16px; border-radius:12px; font-size:0.9rem; cursor:pointer;">View Details</button>
+    </div>`;
+  }
+  myCommissionsList.innerHTML = html;
+
+  // Attach event listeners for all "View Details" buttons
+  document.querySelectorAll('.view-details-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const commissionId = btn.getAttribute('data-commission-id');
+      await showCommissionDetails(commissionId);
+    });
+  });
+}
+
+async function showCommissionDetails(commissionId) {
+  const modal = document.getElementById("commission-details-modal");
+  const content = document.getElementById("commission-details-content");
+  content.innerHTML = "Loading...";
+  modal.style.display = "flex";
+
+  // Fetch commission data
+  const docSnap = await getDoc(doc(db, "commissions", commissionId));
+  if (!docSnap.exists()) {
+    content.innerHTML = "<p>Commission not found.</p>";
+    return;
+  }
+  const data = docSnap.data();
+
+  // Try to get deliverable
+  let audioHtml = "<em>No deliverable uploaded yet.</em>";
+  try {
+    const url = await getDownloadURL(ref(storage, `deliverables/${commissionId}/audio.mp3`));
+    audioHtml = `<audio controls src="${url}" style="width:100%;"></audio>`;
+  } catch (e) {}
+
+  content.innerHTML = `
+    <h3 style="color:#d17bff;">Commission Details</h3>
+    <div><strong>Type:</strong> ${data.projectType || ""}</div>
+    <div><strong>Description:</strong> ${data.description || ""}</div>
+    <div><strong>Status:</strong> ${data.status || "In Progress"}</div>
+    <div><strong>Submitted:</strong> ${data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : ""}</div>
+    <div style="margin-top:18px;">
+      <strong>Deliverable:</strong><br>
+      ${audioHtml}
+    </div>
+  `;
+}
+
+// Modal close logic
+document.getElementById("close-details-modal").onclick = () => {
+  document.getElementById("commission-details-modal").style.display = "none";
+};
+document.getElementById("commission-details-modal").addEventListener("click", (e) => {
+  if (e.target.id === "commission-details-modal") {
+    document.getElementById("commission-details-modal").style.display = "none";
+  }
+});
+
+// Navigation logic
+if (dashboardLink && mainCards) {
+  dashboardLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    messagesSection.style.display = "none";
+    myCommissionsSection.style.display = "none";
+    musicLibrarySection.style.display = "none"; // Hide music library
+    mainCards.style.display = "flex";
+    if (trialCard && trialCard.style.display !== "none") trialCard.style.display = "flex";
+    dashboardLink.classList.add("active");
+    if (messagesLink) messagesLink.classList.remove("active");
+    if (myCommissionsLink) myCommissionsLink.classList.remove("active");
+  });
+}
+if (messagesLink && messagesSection) {
+  messagesLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    messagesSection.style.display = "block";
+    myCommissionsSection.style.display = "none";
+    musicLibrarySection.style.display = "none"; // Hide music library
+    if (mainCards) mainCards.style.display = "none";
+    if (trialCard) trialCard.style.display = "none";
+    messagesLink.classList.add("active");
+    if (dashboardLink) dashboardLink.classList.remove("active");
+    if (myCommissionsLink) myCommissionsLink.classList.remove("active");
+  });
+}
+if (myCommissionsLink && myCommissionsSection) {
+  myCommissionsLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    myCommissionsSection.style.display = "block";
+    messagesSection.style.display = "none";
+    musicLibrarySection.style.display = "none"; // Hide music library
+    if (mainCards) mainCards.style.display = "none";
+    if (trialCard) trialCard.style.display = "none";
+    myCommissionsLink.classList.add("active");
+    if (messagesLink) messagesLink.classList.remove("active");
+    if (dashboardLink) dashboardLink.classList.remove("active");
+    loadMyCommissions();
+  });
+}
+if (musicLibraryLink) {
+  musicLibraryLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    musicLibrarySection.style.display = "block";
+    myCommissionsSection.style.display = "none";
+    messagesSection.style.display = "none";
+    mainCards.style.display = "none";
+    trialCard.style.display = "none";
+    loadMusicLibrary(1, "", "");
+  });
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    document.body.innerHTML = `
+      <div style="
+        min-height:100vh;
+        width:100vw;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        background: #eee7e4;
+        font-family: 'Inter', sans-serif;
+      ">
+        <div style="
+          background: linear-gradient(145deg, #cce0ff, #ffccf5);
+          border-radius: 16px;
+          box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+          padding: 40px 32px;
+          text-align: center;
+          max-width: 400px;
+          margin: auto;
+        ">
+          <h2 style="color:#856034; font-size:1.5rem; margin-bottom:18px;">
+            To see your dashboard please log in to your account.
+          </h2>
+          <p style="color:#444; font-size:1rem;">
+            Redirecting to login page...
+          </p>
+        </div>
+      </div>
+    `;
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 2000);
+    return;
+  }
+
+  // Check trial status
+  const userRef = doc(db, "users", user.uid);
+  let userSnap = await getDoc(userRef);
+
+  // If user doc doesn't exist, create it
+  if (!userSnap.exists()) {
+    await setDoc(userRef, { trialActive: false }, { merge: true });
+    userSnap = await getDoc(userRef);
+  }
+
+  const trialActive = userSnap.data().trialActive === true;
+
+  // Show/hide cards based on trial status
+  if (trialActive) {
+    if (trialCard) trialCard.style.display = "none";
+    if (mainCards) mainCards.style.display = "flex";
+  } else {
+    if (trialCard) trialCard.style.display = "flex";
+    if (mainCards) mainCards.style.display = "none";
+  }
+
+  // Handle trial activation
+  const startTrialBtn = document.getElementById("start-trial-btn");
+  if (startTrialBtn) {
+    startTrialBtn.onclick = async () => {
+      await updateDoc(userRef, { trialActive: true });
+      if (trialCard) trialCard.style.display = "none";
+      if (mainCards) mainCards.style.display = "flex";
+    };
+  }
+
+  // --- USER CHAT LOGIC ---
+  const chatMessages = document.getElementById("chat-messages");
+  const chatForm = document.getElementById("chat-form");
+  const chatInput = document.getElementById("chat-input");
+
+  // Listen for messages between this user and admin
+  if (chatUnsubscribe) chatUnsubscribe();
+  const messagesCol = collection(db, "messages");
+  const q = query(
+    messagesCol,
+    where("userId", "==", user.uid),
+    orderBy("timestamp", "asc")
+  );
+  chatUnsubscribe = onSnapshot(q, (snapshot) => {
+    chatMessages.innerHTML = "";
+    snapshot.forEach(msgDoc => {
+      const msg = msgDoc.data();
+      const isUser = msg.sender === "user";
+      const msgDiv = document.createElement("div");
+      msgDiv.style.margin = "8px 0";
+      msgDiv.style.textAlign = isUser ? "right" : "left";
+      msgDiv.innerHTML = `
+        <span style="
+          display:inline-block;
+          background:${isUser ? "#d17bff" : "#ece1d3"};
+          color:${isUser ? "#fff" : "#333"};
+          padding:8px 14px;
+          border-radius:12px;
+          max-width:70%;
+          font-size:1rem;
+          ">
+          ${msg.text}
+        </span>
+        <div style="font-size:0.8rem; color:#b88b5b; margin-top:2px;">
+          ${msg.timestamp && msg.timestamp.toDate ? msg.timestamp.toDate().toLocaleString() : ""}
+        </div>
+      `;
+      chatMessages.appendChild(msgDiv);
+    });
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  });
+
+  // Send message
+  if (chatForm) {
+    chatForm.onsubmit = async (e) => {
+      e.preventDefault();
+      if (!chatInput.value.trim()) return;
+      await addDoc(collection(db, "messages"), {
+        userId: user.uid,
+        sender: "user",
+        text: chatInput.value.trim(),
+        timestamp: serverTimestamp()
+      });
+      chatInput.value = "";
+    };
+  }
+
+  // Add reference link field
+  const addReferenceBtn = document.getElementById('add-reference-btn');
+  const referenceLinksSection = document.getElementById('reference-links-section');
+  if (addReferenceBtn && referenceLinksSection) {
+    addReferenceBtn.addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'url';
+      input.name = 'reference-link';
+      input.className = 'reference-link';
+      input.placeholder = 'https://...';
+      input.style.marginBottom = '8px';
+      input.style.padding = '8px';
+      input.style.borderRadius = '8px';
+      input.style.width = '100%';
+      referenceLinksSection.appendChild(input);
+    });
+  }
+
+  // Commission form handling
+  const commissionForm = document.getElementById("commission-form");
+  const commissionFormContainer = document.getElementById("commission-form-container");
+  const startNowBtn = document.querySelector('#main-cards .card button');
+
+  if (startNowBtn && commissionFormContainer) {
+    startNowBtn.addEventListener('click', () => {
+      commissionFormContainer.style.display = 'block';
+      window.scrollTo({ top: commissionFormContainer.offsetTop - 40, behavior: 'smooth' });
+    });
+  }
+
+  if (commissionForm) {
+    commissionForm.onsubmit = async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(commissionForm);
+      const projectType = formData.get("project-type");
+      const description = formData.get("description");
+      const referenceLinks = Array.from(commissionForm.querySelectorAll(".reference-link"))
+        .map(input => input.value.trim())
+        .filter(link => link !== "");
+
+      const user = getAuth().currentUser;
+      if (!user) {
+        alert("You must be logged in to submit a commission.");
+        return;
+      }
+
+      const commissionData = {
+        userId: user.uid,
+        projectType,
+        description,
+        references: referenceLinks,
+        createdAt: serverTimestamp()
+      };
+
+      try {
+        await addDoc(collection(db, "commissions"), commissionData);
+        alert("Commission submitted successfully!");
+        commissionForm.reset();
+        commissionFormContainer.style.display = "none";
+        // Refresh My Commissions if visible
+        if (myCommissionsSection && myCommissionsSection.style.display !== "none") {
+          loadMyCommissions();
+        }
+      } catch (error) {
+        console.error("Error submitting commission:", error);
+        alert("There was an error submitting your commission. Please try again.");
+      }
+    };
+  }
+});
+
+const logoutLink = document.getElementById("logout-link");
+if (logoutLink) {
+  logoutLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    signOut(auth)
+      .then(() => {
+        window.location.href = "index.html";
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  });
+}
+  </script>
+</body>
+</html>

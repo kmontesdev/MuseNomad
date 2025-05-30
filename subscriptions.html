@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subscriptions | MuseNomad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #eee7e4;
+      color: #2c1d0b;
+      margin: 0;
+      padding: 0;
+    }
+    .main {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #d17bff;
+      margin-bottom: 40px;
+      font-size: 2.2rem;
+    }
+    .all-features-card {
+      background: #fff6f0;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      padding: 28px 32px;
+      margin-bottom: 38px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      border: 2px solid #ece1d3;
+    }
+    .all-features-title {
+      color: #856034;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+    .all-features-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px 36px;
+    }
+    .all-features-list li {
+      font-size: 1rem;
+      color: #444;
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 6px;
+      min-width: 220px;
+      text-align: left;
+      display: inline-block;
+    }
+    .all-features-list li:before {
+      content: "✔";
+      color: #d17bff;
+      position: absolute;
+      left: 0;
+      font-size: 1.1em;
+    }
+    .tiers {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tier-card {
+      background: linear-gradient(145deg, #cce0ff, #ffccf5);
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      padding: 36px 28px;
+      flex: 1 1 300px;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+      border: 2px solid #ece1d3;
+    }
+    .tier-card.featured {
+      border: 2.5px solid #d17bff;
+      box-shadow: 0 12px 32px rgba(209,123,255,0.08);
+      transform: scale(1.04);
+      z-index: 1;
+    }
+    .tier-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #856034;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .tier-price {
+      font-size: 2.1rem;
+      color: #d17bff;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .tier-desc {
+      color: #444;
+      font-size: 1rem;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .tier-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+      width: 100%;
+    }
+    .tier-features li {
+      margin-bottom: 10px;
+      padding-left: 20px;
+      position: relative;
+      font-size: 1rem;
+    }
+    .tier-features li:before {
+      content: "✔";
+      color: #d17bff;
+      position: absolute;
+      left: 0;
+      font-size: 1.1em;
+    }
+    .tier-btn {
+      background: #d17bff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 32px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: auto;
+    }
+    .tier-btn:hover {
+      background: #856034;
+    }
+    @media (max-width: 900px) {
+      .tiers { flex-direction: column; align-items: center; }
+      .tier-card { max-width: 420px; width: 100%; }
+      .all-features-card { padding: 22px 10px; }
+      .all-features-list { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <h1>Choose Your MuseNomad Subscription</h1>
+    <div class="all-features-card">
+      <div class="all-features-title">All Plans Include:</div>
+      <ul class="all-features-list">
+        <li>Complete access to our Royalty Free Music Library</li>
+        <li>Commercial use license for all tracks</li>
+        <li>60 days credit rollover</li>
+        <li>Schedule live composing session and project planning video calls </li>
+        <li>Discord Access</li>
+        <li>Pause subscriptions any time</li>
+      </ul>
+    </div>
+    <div class="tiers">
+      <!-- Tier 1: Starter -->
+      <div class="tier-card">
+        <div class="tier-title">Starter</div>
+        <div class="tier-price">$9<span style="font-size:1rem;">/mo</span></div>
+        <div class="tier-desc">Perfect for hobbyists, musicians, and content who are looking for custom audio services.</div>
+        <ul class="tier-features">
+          <li>Access to our Royalty Free Music Library</li>
+          <li>1 active comission at a time.</li>
+          <li>Email and Chat Support</li>
+          <li>Discord Access</li>
+        </ul>
+        <button class="tier-btn">Choose Starter</button>
+      </div>
+      <!-- Tier 2: Pro (Featured) -->
+      <div class="tier-card featured">
+        <div class="tier-title">Pro</div>
+        <div class="tier-price">$29<span style="font-size:1rem;">/mo</span></div>
+        <div class="tier-desc">For serious creators needing more commissions, premium tracks, and priority support.</div>
+        <ul class="tier-features">
+          <li>Full music library access</li>
+          <li>Up to 5 active commissions per month</li>
+          <li>Priority email & chat support</li>
+          <li>Early access to new tracks</li>
+          <li>Download stems & alternate versions</li>
+        </ul>
+        <button class="tier-btn">Choose Pro</button>
+      </div>
+      <!-- Tier 3: Studio -->
+      <div class="tier-card">
+        <div class="tier-title">Studio</div>
+        <div class="tier-price">$79<span style="font-size:1rem;">/mo</span></div>
+        <div class="tier-desc">For studios, agencies, and teams needing unlimited access and custom solutions.</div>
+        <ul class="tier-features">
+          <li>Unlimited music library access</li>
+          <li>Unlimited active commissions</li>
+          <li>Dedicated account manager</li>
+          <li>Custom music requests</li>
+          <li>Team collaboration tools</li>
+          <li>Premium support (24/7)</li>
+        </ul>
+        <button class="tier-btn">Choose Studio</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

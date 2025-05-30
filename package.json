@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@wix/pricing-plans": "^1.0.181",
+    "@wix/sdk": "^1.15.22",
+    "firebase": "^11.8.1"
+  }
+}
