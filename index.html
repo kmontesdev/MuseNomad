@@ -463,12 +463,15 @@ color: linear-gradient(90deg, hotpink, orange);
     <p>Get in touch to create sound that moves your audience.</p>
     <div class="hero-buttons">
       <a href="#work" class="btn dark">See My Work</a>
-      <a href="#contact" class="btn light">Schedule a Call</a>
+      <a href="#contact" class="btn light" id="calendly">Schedule a Call</a>
     </div>
   </div> <!-- .hero-text -->
 
 
-
+<!-- Calendly inline widget begin -->
+<div class="calendly-inline-widget" data-url="https://calendly.com/lorebookmagazine" style="min-width:320px;height:700px;"></div>
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<!-- Calendly inline widget end -->
 
   
   <div class="hero-card">
@@ -672,9 +675,7 @@ onAuthStateChanged(auth, async (user) => {
   const carousel = document.querySelector('.thumbnail-carousel');
   let scrollInterval = null;
 
-  // ...existing code...
-
-function startCarouselScroll() {
+  function startCarouselScroll() {
   if (scrollInterval) return;
   scrollInterval = setInterval(() => {
     // If at (or near) the end, move the first image to the end for a seamless loop
@@ -690,9 +691,7 @@ function startCarouselScroll() {
   }, 20); // Adjust speed here (lower = faster)
 }
 
-// ...existing code...
-
-  function stopCarouselScroll() {
+function stopCarouselScroll() {
     clearInterval(scrollInterval);
     scrollInterval = null;
   }
@@ -704,7 +703,36 @@ function startCarouselScroll() {
   startCarouselScroll();
 </script>
 
+<!-- Calendly Modal (hidden by default) -->
+<div id="calendly-modal" style="display:none; position:fixed; z-index:2000; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:0; max-width:95vw; max-height:90vh; box-shadow:0 8px 32px rgba(0,0,0,0.25); display:flex; flex-direction:column; align-items:flex-end; position:relative;">
+    <button id="close-calendly" style="background:none; border:none; font-size:2rem; color:#888; cursor:pointer; position:absolute; top:8px; right:16px; z-index:10;">&times;</button>
+    <div class="calendly-inline-widget" data-url="https://calendly.com/lorebookmagazine" style="min-width:320px;width:90vw;max-width:600px;height:700px;"></div>
+  </div>
 </div>
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+<script>
+  // Calendly modal logic
+  const calendlyBtn = document.getElementById('calendly');
+  const calendlyModal = document.getElementById('calendly-modal');
+  const closeCalendly = document.getElementById('close-calendly');
+
+  calendlyBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    calendlyModal.style.display = 'flex';
+  });
+
+  closeCalendly.addEventListener('click', function() {
+    calendlyModal.style.display = 'none';
+  });
+
+  calendlyModal.addEventListener('click', function(e) {
+    if (e.target === calendlyModal) {
+      calendlyModal.style.display = 'none';
+    }
+  });
+</script>
 
 <script>
   document.querySelector('.btn.dark[href="#work"]').addEventListener('click', function(e) {
