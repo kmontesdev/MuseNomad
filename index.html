@@ -501,7 +501,7 @@ color: linear-gradient(90deg, hotpink, orange);
 </section> <!-- .hero -->
 
 <!-- Video Card Section -->
-<section class="video-card">
+<section class="video-card" id="work" >
   <div class="video-container">
     <div class="main-video-wrapper">
       <iframe
@@ -705,5 +705,12 @@ function startCarouselScroll() {
 </script>
 
 </div>
+
+<script>
+  document.querySelector('.btn.dark[href="#work"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('work').scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
 </body>
 </html>
